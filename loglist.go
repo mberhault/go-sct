@@ -1,12 +1,18 @@
 package sct
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"time"
 
-	ct "github.com/mberhault/certificate-transparency-go"
-	"github.com/mberhault/certificate-transparency-go/loglist2"
-	"github.com/mberhault/certificate-transparency-go/x509util"
+	ct "github.com/google/certificate-transparency-go"
+	ctclient "github.com/google/certificate-transparency-go/client"
+	"github.com/google/certificate-transparency-go/ctutil"
+	ctjsonclient "github.com/google/certificate-transparency-go/jsonclient"
+	"github.com/google/certificate-transparency-go/loglist2"
+	ctx509 "github.com/google/certificate-transparency-go/x509"
+	ctx509util "github.com/google/certificate-transparency-go/x509util"
 )
 
 const (
@@ -20,17 +26,17 @@ func newDefaultLogList() *loglist2.LogList {
 }
 
 func newLogListFromSources(listURL, listSigURL, listPubKeyURL string) *loglist2.LogList {
-	jsonData, err := x509util.ReadFileOrURL(listURL, http.DefaultClient)
+	jsonData, err := ctx509util.ReadFileOrURL(listURL, http.DefaultClient)
 	if err != nil {
 		log.Fatalf("failed to fetch log list %s: %v", listURL, err)
 	}
 
-	sigData, err := x509util.ReadFileOrURL(listSigURL, http.DefaultClient)
+	sigData, err := ctx509util.ReadFileOrURL(listSigURL, http.DefaultClient)
 	if err != nil {
 		log.Fatalf("failed to fetch log list signature %s: %v", listSigURL, err)
 	}
 
-	pemData, err := x509util.ReadFileOrURL(listPubKeyURL, http.DefaultClient)
+	pemData, err := ctx509util.ReadFileOrURL(listPubKeyURL, http.DefaultClient)
 	if err != nil {
 		log.Fatalf("failed to fetch log list public key %s: %v", listPubKeyURL, err)
 	}
@@ -46,4 +52,36 @@ func newLogListFromSources(listURL, listSigURL, listPubKeyURL string) *loglist2.
 	}
 
 	return ll
+}
+
+func newLogInfoFromLog(ctLog *loglist2.Log) (*ctutil.LogInfo, error) {
+	client, err := ctclient.New(
+		ctLog.URL,
+		http.DefaultClient,
+		ctjsonclient.Options{PublicKeyDER: ctLog.Key, UserAgent: "go-st"},
+	)
+	if err != nil {
+		return nil, fmt.Errorf("could not create client for log %q: %v", ctLog.Description, err)
+	}
+
+	logKey, err := ctx509.ParsePKIXPublicKey(ctLog.Key)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse public key for log %q: %v", ctLog.Description, err)
+	}
+
+	verifier, err := ct.NewSignatureVerifier(logKey)
+	if err != nil {
+		return nil, fmt.Errorf("failed to build verifier for log %q: %v", ctLog.Description, err)
+	}
+
+	mmd := time.Duration(ctLog.MMD) * time.Second
+	logInfo := &ctutil.LogInfo{
+		Description: ctLog.Description,
+		Client:      client,
+		MMD:         mmd,
+		Verifier:    verifier,
+		PublicKey:   ctLog.Key,
+	}
+
+	return logInfo, nil
 }
