@@ -19,7 +19,7 @@ func main() {
 	defer conn.Close()
 
 	state := conn.ConnectionState()
-	err = sct.CheckSCTs(&state)
+	err = sct.CheckConnectionState(&state)
 	if err != nil {
 		log.Fatalf("failed SCT check: %v", err)
 	}

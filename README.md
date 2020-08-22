@@ -32,7 +32,7 @@ func main() {
     log.Fatalf("get failed for %s: %v", url, err)
   }
 
-  err = sct.CheckSCTs(resp.TLS)
+  err = sct.CheckConnectionState(resp.TLS)
   if err != nil {
     log.Fatalf("failed SCT check: %v", err)
   }
@@ -58,7 +58,7 @@ SCTs are verified using the following:
 - verify SCT signature using the log's public key
 - check the log for inclusion
 
-`sct.CheckSCTs` returns success when the first valid SCT is encountered, skipping all others.
+`sct.CheckConnectionState` returns success when the first valid SCT is encountered, skipping all others.
 
 ## Caveats:
 

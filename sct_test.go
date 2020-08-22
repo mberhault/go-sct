@@ -6,14 +6,14 @@ import (
 	"github.com/mberhault/go-sct"
 )
 
-func ExampleCheckSCTs() {
+func ExampleCheckConnectionState() {
 	// Verifying the SCTs after a HTTPS GET request.
 	resp, err := http.Get("https://www.certificate-transparency.org")
 	if err != nil {
 		panic("get failed " + err.Error())
 	}
 
-	err = sct.CheckSCTs(resp.TLS)
+	err = sct.CheckConnectionState(resp.TLS)
 	if err != nil {
 		panic("SCT check failed " + err.Error())
 	}

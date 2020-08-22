@@ -17,7 +17,7 @@ func main() {
 		log.Fatalf("get failed for %s: %v", url, err)
 	}
 
-	err = sct.CheckSCTs(resp.TLS)
+	err = sct.CheckConnectionState(resp.TLS)
 	if err != nil {
 		log.Fatalf("failed SCT check: %v", err)
 	}

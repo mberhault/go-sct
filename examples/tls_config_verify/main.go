@@ -17,7 +17,7 @@ func main() {
 		Transport: &http.Transport{
 			TLSClientConfig: &tls.Config{
 				VerifyConnection: func(state tls.ConnectionState) error {
-					return sct.CheckSCTs(&state)
+					return sct.CheckConnectionState(&state)
 				},
 			},
 		},
