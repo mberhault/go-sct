@@ -1,6 +1,6 @@
 # go-sct: Verifying Signed Certificate Timestamps in Go.
 
-[![PkgGoDev](https://pkg.go.dev/badge/github.com/mberhault/go-sct)](https://pkg.go.dev/github.com/mberhault/go-sct)
+[![GoDoc](https://godoc.org/github.com/mberhault/go-sct?status.svg)](https://godoc.org/github.com/mberhault/go-sct)
 
 Verify Signed Certificate Timestamps as defined in [RFC 6962](https://datatracker.ietf.org/doc/rfc6962/).
 
@@ -78,4 +78,4 @@ There are a few noteworthy caveats:
 - if the SCT is not included in the tree but its timestamp is before `Maximum Merge Delay`, the check passes
 - no configuration is currently possible
 - the set of dependencies is massive, pulling a large portion of [certificate-transparency-go](https://github.com/google/certificate-transparency-go) and its dependencies.
-- expect severely increase latency, no optimization or caching has been done
+- expect severely increased latency, no optimization or caching has been done
