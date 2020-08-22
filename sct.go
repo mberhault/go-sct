@@ -1,3 +1,4 @@
+// Package sct verifies Signed Certificate Timestamp in TLS connections.
 package sct
 
 import (
