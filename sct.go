@@ -16,23 +16,27 @@ import (
 
 var (
 	defaultCheckerOnce sync.Once
-	DefaultChecker     *Checker
+	defaultChecker     *Checker
 )
 
+// Checker performs SCT checks.
 type Checker struct {
 	ll *loglist2.LogList
 }
 
+// GetDefaultChecker returns the default Checker, initializing it if needed.
 func GetDefaultChecker() *Checker {
 	defaultCheckerOnce.Do(func() {
-		DefaultChecker = &Checker{
+		defaultChecker = &Checker{
 			ll: newDefaultLogList(),
 		}
 	})
 
-	return DefaultChecker
+	return defaultChecker
 }
 
+// CheckSCTs examines SCTs (both embedded and in the TLS extension) and returns
+// nil if at least one of them is valid.
 func CheckSCTs(state *tls.ConnectionState) error {
 	return GetDefaultChecker().checkSCTs(state)
 }
