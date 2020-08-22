@@ -9,6 +9,8 @@ import (
 
 func main() {
 	host := "www.certificate-transparency.org:443"
+	// Known to return SCTs in TLS extensions.
+	// host := "ritter.vg:443"
 
 	conn, err := tls.Dial("tcp", host, &tls.Config{})
 	if err != nil {

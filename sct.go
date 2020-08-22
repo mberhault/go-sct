@@ -5,7 +5,6 @@ import (
 	"crypto/tls"
 	"errors"
 	"fmt"
-	"log"
 	"sync"
 	"time"
 
@@ -51,10 +50,6 @@ func (c *Checker) checkSCTs(state *tls.ConnectionState) error {
 	if err != nil {
 		return err
 	}
-
-	log.Printf("Certificates: %d", len(state.PeerCertificates))
-	log.Printf("TLS SCTs:     %d", len(state.SignedCertificateTimestamps))
-	log.Printf("Leaf SCTs:    %d", len(chain[0].SCTList.SCTList))
 
 	lastError := errors.New("no Signed Certificate Timestamps found")
 

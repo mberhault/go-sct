@@ -9,10 +9,9 @@ import (
 )
 
 func main() {
-	//	url := "https://www.certificate-transparency.org"
-	//	url := "https://godoc.org"
-	url := "https://letsencrypt.org"
-	//url := "https://ritter.vg"
+	url := "https://www.certificate-transparency.org"
+	// Known to return SCTs in TLS extensions.
+	// url := "https://ritter.vg"
 
 	client := &http.Client{
 		Transport: &http.Transport{

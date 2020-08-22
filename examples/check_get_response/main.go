@@ -9,7 +9,8 @@ import (
 
 func main() {
 	url := "https://www.certificate-transparency.org"
-	//url := "https://ritter.vg"
+	// Known to return SCTs in TLS extensions.
+	// url := "https://ritter.vg"
 
 	resp, err := http.Get(url)
 	if err != nil {
