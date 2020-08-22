@@ -21,6 +21,14 @@ const (
 	logListPubKeyURL = "https://www.gstatic.com/ct/log_list/v2/log_list_pubkey.pem"
 )
 
+var (
+	qualifiedLogs = []loglist2.LogStatus{
+		loglist2.QualifiedLogStatus,
+		loglist2.UsableLogStatus,
+		loglist2.ReadOnlyLogStatus,
+	}
+)
+
 func newDefaultLogList() *loglist2.LogList {
 	return newLogListFromSources(logListURL, logListSigURL, logListPubKeyURL)
 }
@@ -51,7 +59,8 @@ func newLogListFromSources(listURL, listSigURL, listPubKeyURL string) *loglist2.
 		log.Fatalf("could not verify log list signature: %v", err)
 	}
 
-	return ll
+	qualifiedLogs := ll.SelectByStatus(qualifiedLogs)
+	return &qualifiedLogs
 }
 
 func newLogInfoFromLog(ctLog *loglist2.Log) (*ctutil.LogInfo, error) {

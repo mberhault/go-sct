@@ -1,4 +1,5 @@
 // Package sct verifies Signed Certificate Timestamp in TLS connections.
+// See [RFC 6962](https://datatracker.ietf.org/doc/rfc6962/).
 package sct
 
 import (

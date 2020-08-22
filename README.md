@@ -56,7 +56,7 @@ Two types of SCTs (Signed Certificate Timestamps) are examined:
 
 SCTs are verified using the following:
 - extract SCTs from x509 certificate or TLS extension
-- lookup corresponding log in the [Chrome CT log list](https://www.certificate-transparency.org/known-logs), specifically `https://www.gstatic.com/ct/log_list/v2/log_list.json`
+- lookup corresponding log in the [Chrome CT log list](https://www.certificate-transparency.org/known-logs), specifically `https://www.gstatic.com/ct/log_list/v2/log_list.json`, log must be qualified (qualified, usable, or read-only)
 - verify SCT signature using the log's public key
 - check the log for inclusion
 
@@ -72,7 +72,4 @@ There are a few noteworthy caveats:
 - if the SCT is not included in the tree but its timestamp is before `Maximum Merge Delay`, the check passes
 - no configuration is currently possible
 - the set of dependencies is massive, pulling a large portion of [certificate-transparency-go](https://github.com/google/certificate-transparency-go) and its dependencies.
-
-## Performance:
-
-This is a prototype for validation only, many aspects remain unoptimized. Expect severely increased latency.
+- expect severely increase latency, no optimization or caching has been done
