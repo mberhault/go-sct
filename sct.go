@@ -16,18 +16,18 @@ import (
 
 var (
 	defaultCheckerOnce sync.Once
-	defaultChecker     *Checker
+	defaultChecker     *checker
 )
 
-// Checker performs SCT checks.
-type Checker struct {
+// checker performs SCT checks.
+type checker struct {
 	ll *loglist2.LogList
 }
 
-// GetDefaultChecker returns the default Checker, initializing it if needed.
-func GetDefaultChecker() *Checker {
+// getDefaultChecker returns the default Checker, initializing it if needed.
+func getDefaultChecker() *checker {
 	defaultCheckerOnce.Do(func() {
-		defaultChecker = &Checker{
+		defaultChecker = &checker{
 			ll: newDefaultLogList(),
 		}
 	})
@@ -38,10 +38,10 @@ func GetDefaultChecker() *Checker {
 // CheckSCTs examines SCTs (both embedded and in the TLS extension) and returns
 // nil if at least one of them is valid.
 func CheckSCTs(state *tls.ConnectionState) error {
-	return GetDefaultChecker().checkSCTs(state)
+	return getDefaultChecker().checkSCTs(state)
 }
 
-func (c *Checker) checkSCTs(state *tls.ConnectionState) error {
+func (c *checker) checkSCTs(state *tls.ConnectionState) error {
 	if state == nil {
 		return errors.New("no TLS connection state")
 	}
@@ -76,7 +76,7 @@ func (c *Checker) checkSCTs(state *tls.ConnectionState) error {
 }
 
 // Check SCTs provided with the TLS handshake. Returns an error if no SCT is valid.
-func (c *Checker) checkTLSSCTs(scts [][]byte, chain []*ctx509.Certificate) error {
+func (c *checker) checkTLSSCTs(scts [][]byte, chain []*ctx509.Certificate) error {
 	if len(scts) == 0 {
 		return errors.New("no SCTs in SSL handshake")
 	}
@@ -99,7 +99,7 @@ func (c *Checker) checkTLSSCTs(scts [][]byte, chain []*ctx509.Certificate) error
 }
 
 // Check SCTs embedded in the leaf certificate. Returns an error if no SCT is valid.
-func (c *Checker) checkCertSCTs(chain []*ctx509.Certificate) error {
+func (c *checker) checkCertSCTs(chain []*ctx509.Certificate) error {
 	leaf := chain[0]
 	if len(leaf.SCTList.SCTList) == 0 {
 		return errors.New("no SCTs in leaf certificate")
@@ -127,7 +127,7 @@ func (c *Checker) checkCertSCTs(chain []*ctx509.Certificate) error {
 	return errors.New("no valid SCT in SSL handshake")
 }
 
-func (c *Checker) checkOneSCT(x509SCT *ctx509.SerializedSCT, merkleLeaf *ct.MerkleTreeLeaf) error {
+func (c *checker) checkOneSCT(x509SCT *ctx509.SerializedSCT, merkleLeaf *ct.MerkleTreeLeaf) error {
 	sct, err := ctx509util.ExtractSCT(x509SCT)
 	if err != nil {
 		return err
