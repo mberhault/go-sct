@@ -40,10 +40,10 @@ func getDefaultChecker() *checker {
 // CheckConnectionState examines SCTs (both embedded and in the TLS extension) and returns
 // nil if at least one of them is valid.
 func CheckConnectionState(state *tls.ConnectionState) error {
-	return getDefaultChecker().checkSCTs(state)
+	return getDefaultChecker().checkConnectionState(state)
 }
 
-func (c *checker) checkSCTs(state *tls.ConnectionState) error {
+func (c *checker) checkConnectionState(state *tls.ConnectionState) error {
 	if state == nil {
 		return errors.New("no TLS connection state")
 	}
