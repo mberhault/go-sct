@@ -10,8 +10,8 @@ import (
 func main() {
 	//	url := "https://www.certificate-transparency.org"
 	//	url := "https://godoc.org"
-	//	url := "https://letsencrypt.org"
-	url := "https://ritter.vg"
+	url := "https://letsencrypt.org"
+	//url := "https://ritter.vg"
 
 	resp, err := http.Get(url)
 	if err != nil {
