@@ -1,5 +1,7 @@
 # go-sct: Verifying Signed Certificate Timestamps in Go.
 
+[![GoDoc](https://godoc.org/github.com/mberhault/go-sct?status.svg)](https://godoc.org/github.com/mberhault/go-sct)
+
 ## Warning:
 
 This is a prototype, no guarantees are provided regarding correctness.
