@@ -17,6 +17,16 @@ go get github.com/mberhault/go-sct
 Using it to verify a simple https Get:
 
 ```
+package main
+
+import (
+  "log"
+  "net/http"
+
+  "github.com/mberhault/go-sct"
+)
+
+func main() {
   resp, err := http.Get("https://www.certificate-transparency.org")
   if err != nil {
     log.Fatalf("get failed for %s: %v", url, err)
@@ -28,6 +38,7 @@ Using it to verify a simple https Get:
   }
 
   log.Printf("OK")
+}
 ```
 
 See the [examples](examples/) directory for various methods of verifying the [tls.ConnectionState](https://golang.org/pkg/crypto/tls/#ConnectionState):
